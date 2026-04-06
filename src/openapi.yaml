@@ -1,0 +1,641 @@
+openapi: 3.0.0
+info:
+  title: PracticeLab API
+  description: API для платформы онлайн-обучения PracticeLab
+  version: 1.0.0
+  contact:
+    name: PracticeLab Team
+    url: https://dvmn.org
+
+servers:
+  - url: https://api.dvmn.org/v1
+    description: Production server
+  - url: https://staging-api.dvmn.org/v1
+    description: Staging server
+
+paths:
+  /users/{id}:
+    get:
+      summary: Получить информацию о пользователе
+      description: Возвращает информацию о пользователе по ID
+      operationId: getUserById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: UUID пользователя
+      responses:
+        '200':
+          description: Информация о пользователе
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              example:
+                id: "123e4567-e89b-12d3-a456-426614174010"
+                email: "author@example.com"
+                first_name: "Иван"
+                last_name: "Петров"
+                role: "author"
+                created_at: "2024-01-10T09:00:00Z"
+                updated_at: "2024-01-10T09:00:00Z"
+        '404':
+          description: Пользователь не найден
+          content:
+            application/json:
+              example:
+                error: "User not found"
+                message: "User with id 123e4567-e89b-12d3-a456-426614174010 not found"
+
+  /platforms/{id}:
+    get:
+      summary: Получить информацию о платформе
+      description: Возвращает информацию о платформе PracticeLab по ID
+      operationId: getPlatformById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: UUID платформы
+      responses:
+        '200':
+          description: Информация о платформе
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Platform'
+              example:
+                id: "550e8400-e29b-41d4-a716-446655440000"
+                name: "PracticeLab Platform"
+                url: "https://dvmn.org"
+                created_at: "2024-01-15T10:30:00Z"
+                updated_at: "2024-01-15T10:30:00Z"
+        '404':
+          description: Платформа не найдена
+          content:
+            application/json:
+              example:
+                error: "Platform not found"
+                message: "Platform with id 550e8400-e29b-41d4-a716-446655440000 not found"
+
+  /courses/{id}:
+    get:
+      summary: Получить информацию о курсе
+      description: Возвращает информацию о курсе по ID
+      operationId: getCourseById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: UUID курса
+      responses:
+        '200':
+          description: Информация о курсе
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
+              example:
+                id: "6ba7b810-9dad-11d1-80b4-00c04fd430c8"
+                platform_id: "550e8400-e29b-41d4-a716-446655440000"
+                author_id: "123e4567-e89b-12d3-a456-426614174010"
+                title: "Python для начинающих"
+                description: "Курс по основам программирования на Python"
+                status: "published"
+                order_position: 1
+                created_at: "2024-01-20T14:00:00Z"
+                updated_at: "2024-01-20T14:00:00Z"
+        '404':
+          description: Курс не найден
+          content:
+            application/json:
+              example:
+                error: "Course not found"
+                message: "Course with id 6ba7b810-9dad-11d1-80b4-00c04fd430c8 not found"
+
+  /lessons/{id}:
+    get:
+      summary: Получить информацию об уроке
+      description: Возвращает информацию об уроке по ID
+      operationId: getLessonById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: UUID урока
+      responses:
+        '200':
+          description: Информация об уроке
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lesson'
+              example:
+                id: "6ba7b811-9dad-11d1-80b4-00c04fd430c9"
+                course_id: "6ba7b810-9dad-11d1-80b4-00c04fd430c8"
+                author_id: "123e4567-e89b-12d3-a456-426614174010"
+                title: "Основы Python: переменные и типы данных"
+                description: "Введение в базовые концепты Python"
+                status: "published"
+                order_position: 1
+                has_review: true
+                is_current: true
+                is_completed: false
+                created_at: "2024-01-25T09:15:00Z"
+                updated_at: "2024-01-25T09:15:00Z"
+        '404':
+          description: Урок не найден
+          content:
+            application/json:
+              example:
+                error: "Lesson not found"
+                message: "Lesson with id 6ba7b811-9dad-11d1-80b4-00c04fd430c9 not found"
+
+  /steps/{id}:
+    get:
+      summary: Получить информацию о шаге
+      description: Возвращает информацию о шаге по ID
+      operationId: getStepById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: UUID шага
+      responses:
+        '200':
+          description: Информация о шаге
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Step'
+              example:
+                id: "6ba7b812-9dad-11d1-80b4-00c04fd430ca"
+                lesson_id: "6ba7b811-9dad-11d1-80b4-00c04fd430c9"
+                author_id: "123e4567-e89b-12d3-a456-426614174010"
+                title: "Создайте первую программу на Python"
+                content: "Напишите программу, которая выводит 'Hello, World!'"
+                type: "execute"
+                status: "published"
+                order_position: 1
+                has_checklist: true
+                has_illustration: false
+                created_at: "2024-01-25T09:20:00Z"
+                updated_at: "2024-01-25T09:20:00Z"
+        '404':
+          description: Шаг не найден
+          content:
+            application/json:
+              example:
+                error: "Step not found"
+                message: "Step with id 6ba7b812-9dad-11d1-80b4-00c04fd430ca not found"
+
+  /student-works/{id}:
+    get:
+      summary: Получить информацию о работе ученика
+      description: Возвращает информацию о работе ученика по ID
+      operationId: getStudentWorkById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: UUID работы ученика
+      responses:
+        '200':
+          description: Информация о работе ученика
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentWork'
+              example:
+                id: "6ba7b813-9dad-11d1-80b4-00c04fd430cb"
+                step_id: "6ba7b812-9dad-11d1-80b4-00c04fd430ca"
+                lesson_id: "6ba7b811-9dad-11d1-80b4-00c04fd430c9"
+                course_id: "6ba7b810-9dad-11d1-80b4-00c04fd430c8"
+                student_id: "123e4567-e89b-12d3-a456-426614174000"
+                title: "Домашняя работа: Hello World"
+                content: "print('Hello, World!')"
+                content_type: "text"
+                execution_form: "written"
+                completion_time: "homework"
+                difficulty_level: "basic"
+                student_goal: "закрепить материал"
+                engagement_level: "interested"
+                independence_level: "independent"
+                processing_status: "graded"
+                data_size: "small"
+                access_level: "student_teacher"
+                storage_period: "temporary"
+                learning_status: "current_work"
+                service_quality: "meets_standards"
+                student_progress: "progress"
+                created_at: "2024-01-26T18:30:00Z"
+                updated_at: "2024-01-27T10:00:00Z"
+        '404':
+          description: Работа ученика не найдена
+          content:
+            application/json:
+              example:
+                error: "Student work not found"
+                message: "Student work with id 6ba7b813-9dad-11d1-80b4-00c04fd430cb not found"
+
+  /checklists/{id}:
+    get:
+      summary: Получить информацию о чеклисте
+      description: Возвращает информацию о чеклисте по ID
+      operationId: getChecklistById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: UUID чеклиста
+      responses:
+        '200':
+          description: Информация о чеклисте
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Checklist'
+              example:
+                id: "6ba7b815-9dad-11d1-80b4-00c04fd430cd"
+                step_id: "6ba7b812-9dad-11d1-80b4-00c04fd430ca"
+                title: "Проверка программы Hello World"
+                description: "Чеклист для самопроверки программы"
+                order_position: 1
+                created_at: "2024-01-25T09:25:00Z"
+                updated_at: "2024-01-25T09:25:00Z"
+        '404':
+          description: Чеклист не найден
+          content:
+            application/json:
+              example:
+                error: "Checklist not found"
+                message: "Checklist with id 6ba7b815-9dad-11d1-80b4-00c04fd430cd not found"
+
+  /checklist-items/{id}:
+    get:
+      summary: Получить информацию об элементе чеклиста
+      description: Возвращает информацию об элементе чеклиста по ID
+      operationId: getChecklistItemById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: UUID элемента чеклиста
+      responses:
+        '200':
+          description: Информация об элементе чеклиста
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChecklistItem'
+              example:
+                id: "6ba7b816-9dad-11d1-80b4-00c04fd430ce"
+                checklist_id: "6ba7b815-9dad-11d1-80b4-00c04fd430cd"
+                text: "Программа выводит текст 'Hello, World!'"
+                order_position: 1
+                created_at: "2024-01-25T09:26:00Z"
+                updated_at: "2024-01-25T09:26:00Z"
+        '404':
+          description: Элемент чеклиста не найден
+          content:
+            application/json:
+              example:
+                error: "Checklist item not found"
+                message: "Checklist item with id 6ba7b816-9dad-11d1-80b4-00c04fd430ce not found"
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+        last_name:
+          type: string
+        role:
+          type: string
+          enum: [student, teacher, author, admin, reviewer]
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - email
+        - role
+        - created_at
+        - updated_at
+
+    Platform:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        url:
+          type: string
+          format: uri
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - url
+        - created_at
+        - updated_at
+
+    Course:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        platform_id:
+          type: string
+          format: uuid
+        author_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [draft, review, published, archived, hidden]
+        order_position:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - platform_id
+        - author_id
+        - title
+        - status
+        - created_at
+        - updated_at
+
+    Lesson:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        course_id:
+          type: string
+          format: uuid
+        author_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [draft, review, published, hidden, locked]
+        order_position:
+          type: integer
+        has_review:
+          type: boolean
+        is_current:
+          type: boolean
+        is_completed:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - course_id
+        - author_id
+        - title
+        - status
+        - order_position
+        - created_at
+        - updated_at
+
+    Step:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        lesson_id:
+          type: string
+          format: uuid
+        author_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        content:
+          type: string
+        type:
+          type: string
+          enum: [read, answer, execute, submit]
+        status:
+          type: string
+          enum: [draft, review, published, hidden, locked]
+        order_position:
+          type: integer
+        has_checklist:
+          type: boolean
+        has_illustration:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - lesson_id
+        - author_id
+        - title
+        - content
+        - status
+        - order_position
+        - created_at
+        - updated_at
+
+    Checklist:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        step_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        order_position:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - step_id
+        - title
+        - order_position
+        - created_at
+        - updated_at
+
+    ChecklistItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        checklist_id:
+          type: string
+          format: uuid
+        text:
+          type: string
+        order_position:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - checklist_id
+        - text
+        - order_position
+        - created_at
+        - updated_at
+
+    StudentWork:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        step_id:
+          type: string
+          format: uuid
+          nullable: true
+        lesson_id:
+          type: string
+          format: uuid
+          nullable: true
+        course_id:
+          type: string
+          format: uuid
+          nullable: true
+        student_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        content:
+          type: string
+        content_type:
+          type: string
+          enum: [text, image, audio, video, mixed]
+        execution_form:
+          type: string
+          enum: [oral, written]
+        completion_time:
+          type: string
+          enum: [in_lesson, homework, long_term]
+        difficulty_level:
+          type: string
+          enum: [basic, advanced, creative]
+        student_goal:
+          type: string
+        engagement_level:
+          type: string
+          enum: [formal, interested, motivated]
+        independence_level:
+          type: string
+          enum: [independent, with_teacher, group, with_resources]
+        processing_status:
+          type: string
+          enum: [uploaded, reviewing, graded, archived]
+        data_size:
+          type: string
+          enum: [small, medium, large]
+        access_level:
+          type: string
+          enum: [student_only, student_teacher, public, group]
+        storage_period:
+          type: string
+          enum: [temporary, long_term, permanent]
+        learning_status:
+          type: string
+          enum: [entry_task, current_work, final_work, additional_task]
+        service_quality:
+          type: string
+          enum: [meets_standards, needs_improvement, exemplary]
+        student_progress:
+          type: string
+          enum: [beginner, progress, regress, stable]
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - student_id
+        - created_at
+        - updated_at
