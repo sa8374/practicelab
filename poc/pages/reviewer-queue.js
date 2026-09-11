@@ -1,4 +1,4 @@
-import { api, db, GRADE_LABELS, LESSON_STATUS } from '../js/store.js';
+import { api, db, GRADE_LABELS, LESSON_STATUS, COURSE_STATUS } from '../js/store.js';
 import { esc, toast } from '../js/ui.js';
 
 const userName = (id) => (db.users.find((u) => u.id === id) || {}).name || '—';
@@ -7,8 +7,28 @@ const lessonTitle = (id) => (db.lessons.find((l) => l.id === id) || {}).title ||
 const statusClass = { draft: 'tag-gray', review: 'tag-blue', published: 'tag-green' };
 
 export async function init({ container, state }) {
+  const assignedBox = container.querySelector('#assigned-courses');
   const lessonsBox = container.querySelector('#lessons-review');
   const worksBox = container.querySelector('#works-queue');
+
+  async function renderAssigned() {
+    assignedBox.innerHTML = '<div class="loading">Загрузка…</div>';
+    const courses = await api.listAssignedCourses(state.currentUser.id);
+    if (!courses.length) {
+      assignedBox.innerHTML = '<div class="empty">Вы пока не назначены проверяющим ни на один курс.</div>';
+      return;
+    }
+    assignedBox.innerHTML = courses
+      .map(
+        (c) => `
+        <div class="card">
+          <div class="card-title">${esc(c.title)}
+            <span class="tag ${c.status === 'published' ? 'tag-green' : 'tag-gray'}">${esc(COURSE_STATUS[c.status] || c.status)}</span>
+          </div>
+        </div>`
+      )
+      .join('');
+  }
 
   async function renderLessons() {
     lessonsBox.innerHTML = '<div class="loading">Загрузка…</div>';
@@ -86,7 +106,7 @@ export async function init({ container, state }) {
     }
   }
 
-  await Promise.all([renderLessons(), renderWorks()]);
+  await Promise.all([renderAssigned(), renderLessons(), renderWorks()]);
 }
 
 function buildWorkCard(w, rerender) {

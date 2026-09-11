@@ -13,6 +13,7 @@ const routes = {
   'student-courses': { roles: ['student'] },
   'student-works': { roles: ['student'] },
   'author-courses': { roles: ['author'] },
+  'author-catalog': { roles: ['author'] },
   'reviewer-queue': { roles: ['reviewer'] },
 };
 
@@ -22,7 +23,10 @@ const NAV = {
     ['student-courses', 'Мои курсы'],
     ['student-works', 'Мои работы'],
   ],
-  author: [['author-courses', 'Мои курсы']],
+  author: [
+    ['author-courses', 'Мои курсы'],
+    ['author-catalog', 'Каталог курсов'],
+  ],
   reviewer: [['reviewer-queue', 'Проверка работ']],
 };
 

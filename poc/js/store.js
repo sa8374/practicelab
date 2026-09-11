@@ -73,6 +73,21 @@ export const api = {
 
   listAuthorCourses: (authorId) => wait().then(() => db.courses.filter((c) => c.authorId === authorId)),
 
+  listAssignedCourses: (reviewerId) => wait().then(() => db.courses.filter((c) => c.reviewerId === reviewerId)),
+
+  listCourseProgress(courseId) {
+    return wait().then(() =>
+      db.enrollments
+        .filter((e) => e.courseId === courseId)
+        .map((e) => {
+          const student = db.users.find((u) => u.id === e.userId);
+          const total = db.lessons.filter((l) => l.courseId === courseId && l.status === 'published').length;
+          const done = e.completedLessons.filter((id) => db.lessons.some((l) => l.id === id && l.courseId === courseId)).length;
+          return { studentName: student ? student.name : '—', done, total };
+        })
+    );
+  },
+
   createCourse(authorId, { title, description }) {
     return wait().then(() => {
       const t = (title || '').trim();

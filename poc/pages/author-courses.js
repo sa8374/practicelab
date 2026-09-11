@@ -30,11 +30,14 @@ export async function init({ container, state }) {
         <div class="detail"><strong>Проверяющий:</strong> ${c.reviewerId ? esc(nameOf(c.reviewerId)) : '— не назначен —'}</div>
         <div class="actions" data-actions></div>
         <div class="lessons-box" data-lessons></div>
+        <div class="students-box" data-students></div>
       `;
       const actions = card.querySelector('[data-actions]');
       setupActions(actions, c, reviewers, renderCourses);
       const lessonsBox = card.querySelector('[data-lessons]');
       await renderLessonsPanel(lessonsBox, c, renderCourses);
+      const studentsBox = card.querySelector('[data-students]');
+      await renderProgress(studentsBox, c);
       root.appendChild(card);
     }
   }
@@ -188,4 +191,22 @@ async function renderLessonsPanel(box, course, rerender) {
       }
     }
   });
+}
+
+async function renderProgress(box, course) {
+  const rows = await api.listCourseProgress(course.id);
+  if (!rows.length) {
+    box.innerHTML = '<div class="muted">Пока нет записавшихся учеников.</div>';
+    return;
+  }
+  box.innerHTML = `
+    <div class="panel-title">Ученики</div>
+    <div class="lesson-rows">
+      ${rows
+        .map(
+          (r) => `<div class="lesson-row"><span class="lesson-row-title">${esc(r.studentName)}</span><span class="muted">${r.done} из ${r.total} уроков</span></div>`
+        )
+        .join('')}
+    </div>
+  `;
 }
