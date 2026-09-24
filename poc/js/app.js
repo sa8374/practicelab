@@ -1,4 +1,4 @@
-// Оболочка приложения: роутер, навигация, переключение роли.
+// Платформа PracticeLab (оболочка): роутер, навигация, переключение роли.
 
 import { db, ROLE_LABELS } from './store.js';
 import { esc, toast } from './ui.js';
@@ -13,7 +13,6 @@ const routes = {
   'student-courses': { roles: ['student'] },
   'student-works': { roles: ['student'] },
   'author-courses': { roles: ['author'] },
-  'author-catalog': { roles: ['author'] },
   'reviewer-queue': { roles: ['reviewer'] },
 };
 
@@ -23,10 +22,7 @@ const NAV = {
     ['student-courses', 'Мои курсы'],
     ['student-works', 'Мои работы'],
   ],
-  author: [
-    ['author-courses', 'Мои курсы'],
-    ['author-catalog', 'Каталог курсов'],
-  ],
+  author: [['author-courses', 'Мои курсы']],
   reviewer: [['reviewer-queue', 'Проверка работ']],
 };
 
